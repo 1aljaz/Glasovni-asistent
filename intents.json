@@ -14,10 +14,20 @@
       "responses": ["You own the following shares: ABBV, AAPL, FB, NVDA and an ETF of the S&P 500 Index!"],
       "context_set": ""
     },
-    {"tag": "note",
+    {"tag": "create_notes",
         "patterns": ["Create a note", "Write me a note", "Write this down"],
         "responses": ["Yeah, sure", "Here I go", "Here you go"],
         "context_set": ""
+
+    },
+    {"tag":"create_todos",
+      "patterns":["Add a todo", "Create a todo"],
+      "responses":["Sure"],
+      "context_set":""
+    },
+    {"tag":"show_todos",
+      "patterns":["What are my todos", "Tell me what are my todos", "What is on my todo list"],
+      "context_set":""
 
     }
   ]
