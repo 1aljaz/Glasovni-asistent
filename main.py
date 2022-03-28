@@ -1,20 +1,22 @@
+from datetime import datetime
 from neuralintents import GenericAssistant
 import speech_recognition as sr
 import pyttsx3 as tts
 import sys
+import wikipedia as wiki
 
 r = sr.Recognizer()
 
-speaker = tts.init()
-speaker.setProperty('rate', 150)
+speaker = tts.init('sapi5')
+voices=speaker.getProperty('voices')
+speaker.setProperty('voice','voices[0].id')
 
 todo_list = ['Clean my room', 'Study']
 
 def create_notes():
     global r
 
-    speaker.say("What to you want to write onto your note")
-    speaker.runAndWait()
+    speak("What to you want to write onto your note")
 
     done = False
 
@@ -27,8 +29,7 @@ def create_notes():
                 note = r.recognize_google(audio)
                 note = note.lower()
 
-                speaker.say("Choose a filename")
-                speaker.runAndWait()
+                speak("Choose a filename")
 
                 r.adjust_for_ambient_noise(mic, duration=0.2)
                 audio = r.listen(mic)
@@ -39,17 +40,60 @@ def create_notes():
             with open(filename, 'w') as f:
                 f.write(note)
                 done = True
-                speaker.say("I succesfully created a file with a name {filename}", filename)
-                speaker.runAndWait()
+                speak(f"I succesfully created a file with a name {filename}")
+
         except sr.UnknownValueError:
             r = sr.Recognizer()
-            speaker.say("Didnt quite catch that, please repeat")
+            speak("Didnt quite catch that, please repeat")
+
+def wishMe():
+    hour = datetime.now().hour
+
+    if hour >= 0 and hour <12:
+        speak("Good Morning")
+    elif hour >=12 and hour > 18:
+        speak("Good afternoon")
+    else:
+        speak("Good Evening")
+
+def wikipeida():
+    global r
+    speak("What would like me to search for you")
+
+    done = False
+
+    while not done:
+        try:
+            with sr.Microphone() as mic:
+                r.adjust_for_ambient_noise(mic, duration=0.2)
+                audio = r.listen(mic)
+
+                query = r.recognize_google(audio)
+                query = query.lower()
+
+                print (query)
+
+                if query == 'exit':
+                    exit(1)
+
+                result = wiki.summary(query, sentences=3)
+
+                speak(f"You have searched for {query}")
+                speak(result)
+        except sr.UnknownValueError:
+            r = sr.Recognizer()
+            speak("I didnt understand, please repeat")
+        except wiki.exceptions.PageError:
+            speak("The page doesnt exist")
+        except wiki.exceptions.DisambiguationError:
+            speak("There are too many result, try again")
+            continue
+
 
 def create_todo():
     global r
 
-    speaker.say("What woudl you like to add to your todo list")
-    speaker.runAndWait()
+    speak("What woudl you like to add to your todo list")
 
     done = False
 
@@ -65,42 +109,39 @@ def create_todo():
                 todo_list.append(todo)
                 done = True
 
-                speaker.say("I added {todo} to your todo list")
-                speaker.runAndWait()
+                speak(f"I added {todo} to your todo list")
+
         except sr.UnknownValueError:
             r = sr.Recognizer()
-            speaker.say("I didnt understand, please repeat")
-            speaker.runAndWait()
+            speak("I didnt understand, please repeat")
+           
 
 def show_todo():
     global r
 
     speaker.say("Your todos are")
     for item in todo_list:
-        speaker.say(item)
-    speaker.runAndWait()
-
-def hello():
-    speaker.say("Hello, what can I do for you")
-    speaker.runAndWait()
+        speak(item)
 
 def quit():
-    speaker.say("It was nice chatting with you")
-    speaker.runAndWait()
+    speak("It was nice chatting with you")
     exit(1)
 
 def thanks():
-    speaker.say("You are welcome")
-    speaker.runAndWait()
+    speak("You are welcome")
 
+def speak(text):
+    speaker.say(text)
+    speaker.runAndWait()
 
 mappings = {
     "create_notes": create_notes,
     "add_todo": create_todo,
     "show_todos":show_todo,
-    "greeting": hello,
+    "greeting": wishMe,
     "goodbye": quit,
-    "thanks": thanks
+    "thanks": thanks,
+    "wikipedia": wikipeida
 }
 
 assistant = GenericAssistant('intents.json', intent_methods=mappings)

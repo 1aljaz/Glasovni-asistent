@@ -35,6 +35,12 @@
       "responses":"Your welocme",
       "context_set":""
 
+    },
+    {"tag":"wikipedia",
+      "patterns":["Search this up", "I would like to search", "what is this"],
+      "responses":"Right away",
+      "context_set":""
+
     }
   ]
   }
