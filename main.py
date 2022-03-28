@@ -89,14 +89,18 @@ def quit():
     speaker.runAndWait()
     exit(1)
 
+def thanks():
+    speaker.say("You are welcome")
+    speaker.runAndWait()
+
 
 mappings = {
     "create_notes": create_notes,
-    "create_todos": create_todo,
+    "add_todo": create_todo,
     "show_todos":show_todo,
     "greeting": hello,
     "goodbye": quit,
-
+    "thanks": thanks
 }
 
 assistant = GenericAssistant('intents.json', intent_methods=mappings)

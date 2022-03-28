@@ -20,13 +20,19 @@
         "context_set": ""
 
     },
-    {"tag":"create_todos",
-      "patterns":["Add a todo", "Create a todo"],
+    {"tag":"add_todo",
+      "patterns":["Add a todo", "add a todo to my list", "create a todo"],
       "responses":["Sure"],
       "context_set":""
     },
     {"tag":"show_todos",
-      "patterns":["What are my todos", "Tell me what are my todos", "What is on my todo list"],
+      "patterns":["What are my todos", "Tell me what are my todos", "What is on my todo list", "Show my todo list"],
+      "context_set":""
+
+    },
+    {"tag":"thanks",
+      "patterns":["Thank you", "Thanks for your help"],
+      "responses":"Your welocme",
       "context_set":""
 
     }
