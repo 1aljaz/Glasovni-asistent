@@ -1,4 +1,5 @@
 from datetime import datetime
+from cv2 import exp
 from neuralintents import GenericAssistant
 import speech_recognition as sr
 import pyttsx3 as tts
@@ -105,10 +106,13 @@ def create_todo():
 
                 todo = r.recognize_google(audio)
                 todo = todo.lower()
+                
+                if todo == 'abort':
+                    break
 
                 todo_list.append(todo)
                 done = True
-
+                
                 speak(f"I added {todo} to your todo list")
 
         except sr.UnknownValueError:
@@ -124,8 +128,32 @@ def show_todo():
         speak(item)
 
 def quit():
-    speak("It was nice chatting with you")
-    exit(1)
+    global r
+    
+    speak("Please confirm shutting me down, by saying the super secret password")
+    # password is: niger
+    done = False
+
+    while not done:
+        try:
+            with sr.Microphone() as mic:
+                r.adjust_for_ambient_noise(mic, duration=0.2)
+                audio = r.listen(mic)
+
+                command = r.recognize_google(audio)
+                command = command.lower()
+
+                print(command)
+
+                if command == 'niger':
+                    speak("It was nice chatting with you")
+                    exit(1)
+                elif command != 'niger':
+                    speak ("You didnt confirm, aborting shutdown")
+                    break
+        except sr.UnknownValueError:
+            r = sr.Recognizer()
+            speak("Please repeat")
 
 def thanks():
     speak("You are welcome")
