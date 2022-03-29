@@ -1,26 +1,10 @@
-{"intents": [
-    {"tag": "greeting",
-      "patterns": ["Hi", "How are you", "Is anyone there?", "Hello", "Good day", "Whats up", "Hey", "greetings"],
-      "responses": ["Hello!", "Good to see you again!", "Hi there, how can I help?"],
-      "context_set": ""
-    },
-    {"tag": "goodbye",
-      "patterns": ["cya", "See you later", "Goodbye", "I am Leaving", "Have a Good day", "bye", "cao", "see ya"],
-      "responses": ["Sad to see you go :(", "Talk to you later", "Goodbye!"],
-      "context_set": ""
-    },
-    {"tag": "stocks",
-      "patterns": ["what stocks do I own?", "how are my shares?", "what companies am I investing in?", "what am I doing in the markets?"],
-      "responses": ["You own the following shares: ABBV, AAPL, FB, NVDA and an ETF of the S&P 500 Index!"],
-      "context_set": ""
-    },
-    {"tag": "create_notes",
-        "patterns": ["Create a note", "Write me a note", "Write this down"],
-        "responses": ["Yeah, sure", "Here I go", "Here you go"],
-        "context_set": ""
-
-    },
-    {"tag":"add_todo",
+{"intents":[
+  {"tag":"wikipedia",
+      "patterns":["search", "find", "look up"],
+      "responses":"sure",
+      "context_set":""
+  },
+  {"tag":"add_todo",
       "patterns":["Add a todo", "add a todo to my list", "create a todo"],
       "responses":["Sure"],
       "context_set":""
@@ -28,19 +12,12 @@
     {"tag":"show_todos",
       "patterns":["What are my todos", "Tell me what are my todos", "What is on my todo list", "Show my todo list"],
       "context_set":""
-
     },
-    {"tag":"thanks",
-      "patterns":["Thank you", "Thanks for your help"],
-      "responses":"Your welocme",
-      "context_set":""
+    {"tag": "create_notes",
+      "patterns": ["Create a note", "Write me a note", "Write this down"],
+      "responses": ["Yeah, sure", "Here I go", "Here you go"],
+      "context_set": ""
 
-    },
-    {"tag":"wikipedia",
-      "patterns":["Search this up", "I would like to search", "what is this"],
-      "responses":"Right away",
-      "context_set":""
-
-    }
-  ]
   }
+]
+}
