@@ -3,6 +3,7 @@ from neuralintents import GenericAssistant
 import speech_recognition as sr
 import pyttsx3 as tts
 import wikipedia as wiki
+import os
 
 r = sr.Recognizer()
 
@@ -28,9 +29,8 @@ def listen():
 
                 command = r.recognize_google(audio)
                 command = command.lower()
-                if 'alexa' in command:
-                    command = command.replace('alexa ', '')
-                    print (command)
+
+                print (command)
                 return command
 
         except sr.UnknownValueError:
@@ -46,6 +46,8 @@ def greeting():
         talk("Good afternoon")
     else:
         talk("Good Evening")
+    
+    trainnot()
 
 def wikipedia():
 
@@ -54,15 +56,12 @@ def wikipedia():
     query = listen()
     
     print (query)
-    if 'quit' in query:
-        talk ("Quitting")
-        return
 
     try:        
         talk (f"According to wikipedia {query} is")
         result = wiki.summary(query, sentences=3)
     except wiki.exceptions.PageError:
-        talk("Page doesnt exist")
+        talk(f"Page for {query} doesnt exist")
     except wiki.exceptions.DisambiguationError:
         talk("There are too many results, try again")
     talk(result)
@@ -93,15 +92,49 @@ def create_note():
         f.write(note)
     talk (f"Succesfully created a note with a name {filename}")
 
+def name():
+    talk("My name is jarvis the voice assistant, and you are?")
+    name = listen()
+    talk(f"I am pleased to bo working for you{name}")
+
+def there():
+    talk ('I am always here sir. What can I do for you?')
+
+def trainnot():
+    talk("Do you want to train the model or load it?")
+    choice = listen()
+
+    if 'train' in choice:
+        if os.path.exists('assistant_model.h5'):
+            os.remove('assistant_model.h5')
+            os.remove('assistant_model_words.pkl')
+            os.remove('assistant_model_classes.pkl')
+        talk ('training')
+        assistant.train_model()
+        assistant.save_model()
+        talk ('The model is ready to use')
+    
+    if 'load' in choice:
+        if not os.path.exists('assistant_model.h5'):
+            talk ('There is no model to be loaded, training')
+            assistant.train_model()
+            assistant.save_model()
+        assistant.load_model()
+        talk ('loading')
+
+
+
 mappings = {
     "wikipedia": wikipedia,
     "create_todo": create_todo,
     "show_todos": show_todo,
-    "create_notes": create_note
+    "create_notes": create_note,
+    "name": name,
+    "there": there
 }
 
-assistant = GenericAssistant('intents_better.json', intent_methods=mappings)
-assistant.train_model()
+assistant = GenericAssistant('intents.json', intent_methods=mappings)
+
 
 greeting()
 
@@ -109,5 +142,9 @@ while True:
     message = listen()
     print(message)
 
-    assistant.request(message)
-
+    if 'stop' in message:
+        talk ("Goodbye, see you soon")
+        exit (0)
+    if 'jarvis' in message:
+        message = message.replace('jarvis', '')
+        assistant.request(message)

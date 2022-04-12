@@ -17,7 +17,16 @@
       "patterns": ["Create a note", "Write me a note", "Write this down"],
       "responses": ["Yeah, sure", "Here I go", "Here you go"],
       "context_set": ""
-
-  }
+    },
+    {"tag": "name",
+      "patterns": ["Whats your name", "Who are you", "Who you might be"],
+      "responses": [""],
+      "context_set": ""
+    },
+    {"tag": "there",
+      "patterns": ["Are you there", "Where are you", "Anyone"],
+      "responses": ["None"],
+      "context_set": ""
+    }
 ]
 }
