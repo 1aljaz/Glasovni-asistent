@@ -1,11 +1,11 @@
 {"intents":[
   {"tag":"wikipedia",
-      "patterns":["search", "find", "look up"],
+      "patterns":["search for", "find the meaning of", "look up"],
       "responses":"sure",
       "context_set":""
   },
   {"tag":"add_todo",
-      "patterns":["Add a todo", "add a todo to my list", "create a todo"],
+      "patterns":["Add a todo", "Add a todo to my list", "create a todo"],
       "responses":["Sure"],
       "context_set":""
     },
@@ -13,9 +13,19 @@
       "patterns":["What are my todos", "Tell me what are my todos", "What is on my todo list", "Show my todo list"],
       "context_set":""
     },
+    {"tag": "delete_todo",
+      "patterns": ["Delete a todo", "Remove a todo", "Remove a todo from my list"],
+      "responses": ["None"],
+      "context_set": ""
+    },
     {"tag": "create_notes",
       "patterns": ["Create a note", "Write me a note", "Write this down"],
       "responses": ["Yeah, sure", "Here I go", "Here you go"],
+      "context_set": ""
+    },
+    {"tag": "delete_note",
+      "patterns": ["Delete a note", "Remove a note"],
+      "responses": ["None"],
       "context_set": ""
     },
     {"tag": "name",
@@ -25,6 +35,16 @@
     },
     {"tag": "there",
       "patterns": ["Are you there", "Where are you", "Anyone"],
+      "responses": ["None"],
+      "context_set": ""
+    },
+    {"tag": "hello",
+      "patterns": ["Hello", "Hi", "Heyoo","How are you", "Whats up"],
+      "responses": ["None"],
+      "context_set": ""
+    },
+    {"tag": "weather",
+      "patterns": ["How is the weather", "Can I get a forcast", "What is the weather gonna be like"],
       "responses": ["None"],
       "context_set": ""
     }

@@ -1,9 +1,17 @@
 from datetime import datetime
+from sre_constants import SUCCESS
 from neuralintents import GenericAssistant
+from requests import delete
 import speech_recognition as sr
 import pyttsx3 as tts
 import wikipedia as wiki
 import os
+import python_weather
+
+    # TODO
+    #    1. Wether look
+    #    2. Reminders
+    #    3. Calculations
 
 r = sr.Recognizer()
 
@@ -37,7 +45,7 @@ def listen():
             r = sr.Recognizer()
        
 
-def greeting():
+def hello():
     hour = datetime.now().hour
 
     if hour >= 0 and hour <12:
@@ -46,8 +54,6 @@ def greeting():
         talk("Good afternoon")
     else:
         talk("Good Evening")
-    
-    trainnot()
 
 def wikipedia():
 
@@ -66,6 +72,25 @@ def wikipedia():
         talk("There are too many results, try again")
     talk(result)
 
+async def weather():
+    client = python_weather.Client(format=python_weather.METRIC)
+
+    weather = await client.find("Ljubljana")
+
+    print(weather.current.temperature)
+    talk(weather.current.temperature)
+    
+    talk('Forcast for upocomming days is')
+
+    for forecast in weather.forecasts:
+        print(str(forecast.date), forecast.sky_text, forecast.temperature)
+        talk(str(forecast.date), forecast.sky_text, forecast.temperature)
+
+    await client.close()
+
+
+
+
 def create_todo():
 
     talk ("What would you like to add to your todo list")
@@ -81,6 +106,16 @@ def show_todo():
     for item in todo_list:
         talk (item)
 
+def remove_todo():
+    talk("What should I remove from your todo list")
+
+    item = listen()
+
+    if 'item' in todo_list:
+        todo_list.remove(item)
+    
+    talk (f"I removed {item} from yout todo list")
+
 def create_note():
     talk ("What would you like to write to your notes")
     note = listen()
@@ -88,9 +123,23 @@ def create_note():
     talk ("Choose a filename")
     filename = listen()
 
-    with open(filename, 'w') as f:
+    with open(os.path.join("scripts/notes", filename), 'w') as f:
         f.write(note)
     talk (f"Succesfully created a note with a name {filename}")
+
+def delete_note():
+    talk ("What note would you like to delete?")
+
+    try:
+        item = listen()
+
+        if os.path.exists(os.path.join("scripts\notes",item)):
+            os.remove(item)
+            talk (f"I removed {item} from your notes")
+        else:
+            talk(f"{item} filename doesnt exist, retrying")
+    except SUCCESS:
+        return
 
 def name():
     talk("My name is jarvis the voice assistant, and you are?")
@@ -113,30 +162,35 @@ def trainnot():
         assistant.train_model()
         assistant.save_model()
         talk ('The model is ready to use')
-    
     if 'load' in choice:
+        talk ('loading')
         if not os.path.exists('assistant_model.h5'):
             talk ('There is no model to be loaded, training')
             assistant.train_model()
             assistant.save_model()
         assistant.load_model()
-        talk ('loading')
+        talk ('The model was loaded')
 
 
 
 mappings = {
     "wikipedia": wikipedia,
     "create_todo": create_todo,
+    "delete_todo": remove_todo,
     "show_todos": show_todo,
     "create_notes": create_note,
+    "delete_note": delete_note,
     "name": name,
-    "there": there
+    "there": there,
+    "hello":hello,
+    "weather": weather
 }
 
 assistant = GenericAssistant('intents.json', intent_methods=mappings)
 
 
-greeting()
+hello()
+trainnot()
 
 while True:
     message = listen()
@@ -145,6 +199,4 @@ while True:
     if 'stop' in message:
         talk ("Goodbye, see you soon")
         exit (0)
-    if 'jarvis' in message:
-        message = message.replace('jarvis', '')
-        assistant.request(message)
+    assistant.request(message)
