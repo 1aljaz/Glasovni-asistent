@@ -1,9 +1,10 @@
 Potek seminarske
 1. Uvod
 2. Zakaj uporabljati glasovni asistent
-	2.1 Automatizacija ponavljajocih se nalog
-	2.2 Hands-free operation
-	2.3 Odpravlja jezikovne pregrade
+	2.1 Zgodovina
+	2.2 Automatizacija ponavljajocih se nalog
+	2.3 Hands-free operation
+	2.4 Odpravlja jezikovne pregrade
 3. Raba && Primeri rabe
 	3.1 Alexa, Siri, Google Assisstant
 	3.2 Pametne hiše + primer pametne inštalacije
